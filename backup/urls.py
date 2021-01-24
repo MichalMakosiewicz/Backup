@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from storage_api.views import GetArchiveViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('storage_api.urls'))
+    path('api/', include('storage_api.urls')),
+    path('archive/get/<str:zip_name>', GetArchiveViewSet.as_view())
 ]
