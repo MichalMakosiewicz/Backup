@@ -18,9 +18,6 @@ def get_status(urls_len, errors):
 @shared_task()
 def save_files(urls, file_name):
     errors = 0
-    object_instance = FilesStatusModel.objects.get(pk=file_name)
-    object_instance.status = "in-progress"
-    object_instance.save()
     with ZipFile(f'storage/{file_name}.zip', 'w') as zip_file:
         for url in urls:
             r = requests.get(url, stream=True)
@@ -32,6 +29,7 @@ def save_files(urls, file_name):
             else:
                 errors += 1
     try:
+        object_instance = FilesStatusModel.objects.get(pk=file_name)
         object_instance.status = get_status(len(urls), errors)
         if len(urls) != errors:
             object_instance.zip = f'storage/{file_name}.zip'

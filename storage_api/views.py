@@ -30,7 +30,7 @@ class ArchiveViewSet(APIView):
         try:
             serializer = FilesStatusSerializer(data={
                 'hash_name': file_name,
-                'status': 'processing'
+                'status': 'in-progress'
             })
             if serializer.is_valid():
                 serializer.save()
@@ -46,8 +46,8 @@ class GetArchiveViewSet(APIView):
         file_path = f'{STORAGE_PATH}{zip_name}'
         print(file_path)
         if os.path.exists(file_path):
-            with open(file_path, 'rb') as zip:
-                response = HttpResponse(zip, content_type="application/zip")
+            with open(file_path, 'rb') as zip_file:
+                response = HttpResponse(zip_file, content_type="application/zip")
                 response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
                 return response
         return Response(status=status.HTTP_404_NOT_FOUND)
